@@ -63,20 +63,16 @@ export default function TodoApp() {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  const handleDragStart = (e) => {
-    const taskId = Number.parseInt(e.currentTarget.dataset.taskId, 10);
-    const task = tasks.find((t) => t.id === taskId);
-    if (task) {
-      setDraggedTask(task);
-    }
+  const handleDragStart = (task) => {
+    setDraggedTask(task);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
-  const handleDrop = (e) => {
-    const columnId = e.currentTarget.dataset.columnId;
+  const handleDrop = (columnId) => (e) => {
+    e.preventDefault();
     if (draggedTask) {
       setTasks(tasks.map((task) => (task.id === draggedTask.id ? { ...task, column: columnId } : task)));
       setDraggedTask(null);
@@ -131,11 +127,10 @@ export default function TodoApp() {
           {COLUMNS.map((column) => (
             <section
               key={column.id}
-              data-columnId={column.id}
               className={`${column.color} rounded-xl p-6 min-h-96 transition-colors`}
               aria-labelledby={`column-${column.id}`}
               onDragOver={handleDragOver}
-              onDrop={handleDrop}
+              onDrop={handleDrop(column.id)}
             >
               <h2
                 id={`column-${column.id}`}
@@ -148,10 +143,9 @@ export default function TodoApp() {
                 {getColumnTasks(column.id).map((task) => (
                   <article
                     key={task.id}
-                    data-taskId={task.id}
                     draggable={editingId !== task.id}
-                    onDragStart={handleDragStart}
-                    className={`${getColorClass(task.column)} p-4 rounded-lg border-2 ${editingId == task.id ? 'cursor-default' : 'cursor-move'} hover:shadow-md transition-shadow select-none group`}
+                    onDragStart={() => handleDragStart(task)}
+                    className={`${getColorClass(task.column)} p-4 rounded-lg border-2 ${editingId == task.id ? 'cursor-default' : 'cursor-move'} hover:shadow-md transition-shadow select-none group ${draggedTask?.id === task.id ? 'opacity-50' : ''}`}
                     aria-label={`Task: ${task.title}`}
                   >
                     {editingId === task.id ? (
