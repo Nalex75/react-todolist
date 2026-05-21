@@ -10,8 +10,8 @@ const COLUMNS = [
 
 export default function TodoApp() {
   const [tasks, setTasks] = useState([
-    { id: 1, title: 'Design new feature', column: 'todo', date: null, author: null },
-    { id: 2, title: 'Review code', column: 'doing', date: '2026-05-25', author: 'Alice' },
+    { id: 1, title: 'Design new feature', content: 'New feature specs', column: 'todo', date: null, author: null },
+    { id: 2, title: 'Review code', content: 'We need to do X, Y, Z', column: 'doing', date: '2026-05-25', author: 'Alice' },
     { id: 3, title: 'Fix bugs', column: 'done', date: null, author: null },
   ]);
 
@@ -19,6 +19,7 @@ export default function TodoApp() {
   const [draggedTask, setDraggedTask] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [editTitle, setEditTitle] = useState('');
+  const [editContent, setEditContent] = useState('');
   const [editDate, setEditDate] = useState('');
   const [editAuthor, setEditAuthor] = useState('');
 
@@ -40,6 +41,7 @@ export default function TodoApp() {
   const startEdit = (task) => {
     setEditingId(task.id);
     setEditTitle(task.title);
+    setEditContent(task.content);
     setEditDate(task.date || '');
     setEditAuthor(task.author || '');
   };
@@ -47,7 +49,7 @@ export default function TodoApp() {
   const saveEdit = (id) => {
     setTasks(
       tasks.map((task) =>
-        task.id === id ? { ...task, title: editTitle, date: editDate || null, author: editAuthor || null } : task,
+        task.id === id ? { ...task, title: editTitle, content: editContent, date: editDate || null, author: editAuthor || null } : task,
       ),
     );
     setEditingId(null);
@@ -119,7 +121,7 @@ export default function TodoApp() {
               type="submit"
               className="px-6 py-3 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors font-light"
             >
-              Add
+              Add +
             </button>
           </div>
         </form>
@@ -154,9 +156,15 @@ export default function TodoApp() {
                   >
                     {editingId === task.id ? (
                       <div className="space-y-3">
-                        <textarea
+                        <input
+                          type="text"
                           value={editTitle}
                           onChange={(e) => setEditTitle(e.target.value)}
+                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-slate-800 font-light text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+                        />
+                        <textarea
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
                           className="w-full px-3 py-2 border border-slate-300 rounded-md text-slate-800 font-light text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 resize-none"
                           rows="2"
                         />
@@ -196,12 +204,12 @@ export default function TodoApp() {
                     ) : (
                       <div>
                         <div className="flex justify-between items-start gap-2 mb-2">
-                          <div
+                          <p
                             className="text-slate-800 font-light flex-1 cursor-divointer hover:underline"
                             onClick={() => startEdit(task)}
                           >
                             {task.title}
-                          </div>
+                          </p>
                           <button
                             onClick={() => deleteTask(task.id)}
                             className="text-slate-400 hover:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity text-sm"
@@ -209,6 +217,7 @@ export default function TodoApp() {
                             ✕
                           </button>
                         </div>
+                        {task.content && <p className="text-slate-600">{task.content}</p>}
                         {(task.date || task.author) && (
                           <div className="space-y-1 text-xs">
                             {task.date && (
