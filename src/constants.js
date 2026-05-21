@@ -1,4 +1,4 @@
-export const TEAM_MEMBERS = ['Alice', 'Bob', 'Charlie'];
+export const TEAM_MEMBERS = ['Françoise Poirier', 'Mr 🅱️', 'Alex Cetto le matin'];
 
 export const COLUMNS = [
   { id: 'todo', title: 'To Do', color: 'bg-blue-50' },

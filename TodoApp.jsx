@@ -6,7 +6,7 @@ import { COLUMNS } from './src/constants';
 export default function TodoApp() {
   const [tasks, setTasks] = useState([
     { id: 1, title: 'Design new feature', content: 'New feature specs', column: 'todo', date: null, author: null },
-    { id: 2, title: 'Review code', content: 'We need to do X, Y, Z', column: 'doing', date: '2026-05-25', author: 'Alice' },
+    { id: 2, title: 'Review code', content: 'We need to do X, Y, Z', column: 'doing', date: '2026-05-25', author: 'Mr 🅱️' },
     { id: 3, title: 'Fix bugs', content: '', column: 'done', date: null, author: null },
   ]);
 
@@ -17,14 +17,14 @@ export default function TodoApp() {
   const [editDate, setEditDate] = useState('');
   const [editAuthor, setEditAuthor] = useState('');
 
-  const addTask = (title) => {
+  const addTask = ({ title, content, date, author }) => {
     const newTask = {
       id: Date.now(),
       title,
-      content: '',
+      content,
       column: 'todo',
-      date: null,
-      author: null,
+      date,
+      author,
     };
     setTasks([...tasks, newTask]);
   };
