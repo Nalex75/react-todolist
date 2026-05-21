@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm run *)",
       "mcp__Claude_in_Chrome__tabs_context_mcp",
-      "Bash(grep -E \"\\\\.\\(jsx|js\\)$\")"
+      "Bash(grep -E \"\\\\.\\(jsx|js\\)$\")",
+      "Bash(npm install *)"
     ]
   }
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import TaskForm from './src/components/TaskForm';
-import TaskColumn from './src/components/TaskColumn';
-import { COLUMNS } from './src/constants';
+import TaskForm from '../components/TaskForm';
+import TaskColumn from '../components/TaskColumn';
+import { COLUMNS } from '../constants';
 
 export default function TodoApp() {
   const [tasks, setTasks] = useState([
@@ -88,7 +88,7 @@ export default function TodoApp() {
   const getColumnTasks = (column) => tasks.filter((task) => task.column === column);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+    <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-12">
