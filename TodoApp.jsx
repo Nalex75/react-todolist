@@ -46,11 +46,9 @@ export default function TodoApp() {
 
   const saveEdit = (id) => {
     setTasks(
-      tasks.map(task =>
-        task.id === id
-          ? { ...task, title: editTitle, date: editDate || null, author: editAuthor || null }
-          : task
-      )
+      tasks.map((task) =>
+        task.id === id ? { ...task, title: editTitle, date: editDate || null, author: editAuthor || null } : task,
+      ),
     );
     setEditingId(null);
   };
@@ -60,24 +58,25 @@ export default function TodoApp() {
   };
 
   const deleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  const handleDragStart = (task) => {
-    setDraggedTask(task);
+  const handleDragStart = (e) => {
+    const taskId = Number.parseInt(e.currentTarget.dataset.taskId, 10);
+    const task = tasks.find((t) => t.id === taskId);
+    if (task) {
+      setDraggedTask(task);
+    }
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
-  const handleDrop = (column) => {
+  const handleDrop = (e) => {
+    const columnId = e.currentTarget.dataset.columnId;
     if (draggedTask) {
-      setTasks(
-        tasks.map(task =>
-          task.id === draggedTask.id ? { ...task, column } : task
-        )
-      );
+      setTasks(tasks.map((task) => (task.id === draggedTask.id ? { ...task, column: columnId } : task)));
       setDraggedTask(null);
     }
   };
@@ -95,7 +94,7 @@ export default function TodoApp() {
     }
   };
 
-  const getColumnTasks = (column) => tasks.filter(task => task.column === column);
+  const getColumnTasks = (column) => tasks.filter((task) => task.column === column);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
@@ -127,24 +126,31 @@ export default function TodoApp() {
 
         {/* Columns */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {COLUMNS.map(column => (
-            <div
+          {COLUMNS.map((column) => (
+            <section
               key={column.id}
+              data-columnId={column.id}
               className={`${column.color} rounded-xl p-6 min-h-96 transition-colors`}
+              aria-labelledby={`column-${column.id}`}
               onDragOver={handleDragOver}
-              onDrop={() => handleDrop(column.id)}
+              onDrop={handleDrop}
             >
-              <h2 className="text-lg font-light text-slate-700 mb-4 pb-4 border-b border-slate-200">
+              <h2
+                id={`column-${column.id}`}
+                className="text-lg font-light text-slate-700 mb-4 pb-4 border-b border-slate-200"
+              >
                 {column.title}
               </h2>
 
               <div className="space-y-3">
-                {getColumnTasks(column.id).map(task => (
-                  <div
+                {getColumnTasks(column.id).map((task) => (
+                  <article
                     key={task.id}
+                    data-taskId={task.id}
                     draggable={editingId !== task.id}
-                    onDragStart={() => handleDragStart(task)}
-                    className={`${getColorClass(task.column)} p-4 rounded-lg border-2 ${editingId !== task.id ? 'cursor-move' : 'cursor-default'} hover:shadow-md transition-shadow select-none group`}
+                    onDragStart={handleDragStart}
+                    className={`${getColorClass(task.column)} p-4 rounded-lg border-2 ${editingId == task.id ? 'cursor-default' : 'cursor-move'} hover:shadow-md transition-shadow select-none group`}
+                    aria-label={`Task: ${task.title}`}
                   >
                     {editingId === task.id ? (
                       <div className="space-y-3">
@@ -166,8 +172,10 @@ export default function TodoApp() {
                           className="w-full px-3 py-2 border border-slate-300 rounded-md text-slate-800 font-light text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
                         >
                           <option value="">No author</option>
-                          {TEAM_MEMBERS.map(member => (
-                            <option key={member} value={member}>{member}</option>
+                          {TEAM_MEMBERS.map((member) => (
+                            <option key={member} value={member}>
+                              {member}
+                            </option>
                           ))}
                         </select>
                         <div className="flex gap-2">
@@ -188,9 +196,12 @@ export default function TodoApp() {
                     ) : (
                       <div>
                         <div className="flex justify-between items-start gap-2 mb-2">
-                          <p className="text-slate-800 font-light flex-1 cursor-pointer hover:underline" onClick={() => startEdit(task)}>
+                          <div
+                            className="text-slate-800 font-light flex-1 cursor-divointer hover:underline"
+                            onClick={() => startEdit(task)}
+                          >
                             {task.title}
-                          </p>
+                          </div>
                           <button
                             onClick={() => deleteTask(task.id)}
                             className="text-slate-400 hover:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity text-sm"
@@ -203,9 +214,7 @@ export default function TodoApp() {
                             {task.date && (
                               <p className="text-slate-600">📅 {new Date(task.date).toLocaleDateString()}</p>
                             )}
-                            {task.author && (
-                              <p className="text-slate-600">👤 {task.author}</p>
-                            )}
+                            {task.author && <p className="text-slate-600">👤 {task.author}</p>}
                           </div>
                         )}
                         <button
@@ -216,16 +225,14 @@ export default function TodoApp() {
                         </button>
                       </div>
                     )}
-                  </div>
+                  </article>
                 ))}
 
                 {getColumnTasks(column.id).length === 0 && (
-                  <p className="text-slate-400 text-center py-8 font-light text-sm">
-                    Drop tasks here
-                  </p>
+                  <p className="text-slate-400 text-center py-8 font-light text-sm">Drop tasks here</p>
                 )}
               </div>
-            </div>
+            </section>
           ))}
         </div>
       </div>
