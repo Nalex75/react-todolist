@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 
 const TEAM_MEMBERS = ['Alice', 'Bob', 'Charlie'];
 
+const COLUMNS = [
+  { id: 'todo', title: 'To Do', color: 'bg-blue-50' },
+  { id: 'doing', title: 'Doing', color: 'bg-orange-50' },
+  { id: 'done', title: 'Done', color: 'bg-green-50' },
+];
+
 export default function TodoApp() {
   const [tasks, setTasks] = useState([
     { id: 1, title: 'Design new feature', column: 'todo', date: null, author: null },
@@ -91,12 +97,6 @@ export default function TodoApp() {
 
   const getColumnTasks = (column) => tasks.filter(task => task.column === column);
 
-  const columns = [
-    { id: 'todo', title: 'To Do', color: 'bg-blue-50' },
-    { id: 'doing', title: 'Doing', color: 'bg-orange-50' },
-    { id: 'done', title: 'Done', color: 'bg-green-50' },
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
       <div className="max-w-7xl mx-auto">
@@ -127,7 +127,7 @@ export default function TodoApp() {
 
         {/* Columns */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {columns.map(column => (
+          {COLUMNS.map(column => (
             <div
               key={column.id}
               className={`${column.color} rounded-xl p-6 min-h-96 transition-colors`}
