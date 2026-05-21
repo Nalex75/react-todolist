@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 
+const TEAM_MEMBERS = ['Alice', 'Bob', 'Charlie'];
+
 export default function TodoApp() {
   const [tasks, setTasks] = useState([
-    { id: 1, title: 'Design new feature', column: 'todo' },
-    { id: 2, title: 'Review code', column: 'doing' },
-    { id: 3, title: 'Fix bugs', column: 'done' },
+    { id: 1, title: 'Design new feature', column: 'todo', date: null, author: null },
+    { id: 2, title: 'Review code', column: 'doing', date: '2026-05-25', author: 'Alice' },
+    { id: 3, title: 'Fix bugs', column: 'done', date: null, author: null },
   ]);
 
   const [input, setInput] = useState('');
   const [draggedTask, setDraggedTask] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editDate, setEditDate] = useState('');
+  const [editAuthor, setEditAuthor] = useState('');
 
   const addTask = (e) => {
     e.preventDefault();
@@ -17,10 +23,34 @@ export default function TodoApp() {
         id: Date.now(),
         title: input,
         column: 'todo',
+        date: null,
+        author: null,
       };
       setTasks([...tasks, newTask]);
       setInput('');
     }
+  };
+
+  const startEdit = (task) => {
+    setEditingId(task.id);
+    setEditTitle(task.title);
+    setEditDate(task.date || '');
+    setEditAuthor(task.author || '');
+  };
+
+  const saveEdit = (id) => {
+    setTasks(
+      tasks.map(task =>
+        task.id === id
+          ? { ...task, title: editTitle, date: editDate || null, author: editAuthor || null }
+          : task
+      )
+    );
+    setEditingId(null);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
   };
 
   const deleteTask = (id) => {
@@ -112,19 +142,80 @@ export default function TodoApp() {
                 {getColumnTasks(column.id).map(task => (
                   <div
                     key={task.id}
-                    draggable
+                    draggable={editingId !== task.id}
                     onDragStart={() => handleDragStart(task)}
-                    className={`${getColorClass(task.column)} p-4 rounded-lg border-2 cursor-move hover:shadow-md transition-shadow select-none group`}
+                    className={`${getColorClass(task.column)} p-4 rounded-lg border-2 ${editingId !== task.id ? 'cursor-move' : 'cursor-default'} hover:shadow-md transition-shadow select-none group`}
                   >
-                    <div className="flex justify-between items-start gap-2">
-                      <p className="text-slate-800 font-light flex-1">{task.title}</p>
-                      <button
-                        onClick={() => deleteTask(task.id)}
-                        className="text-slate-400 hover:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity text-sm"
-                      >
-                        ✕
-                      </button>
-                    </div>
+                    {editingId === task.id ? (
+                      <div className="space-y-3">
+                        <textarea
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
+                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-slate-800 font-light text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 resize-none"
+                          rows="2"
+                        />
+                        <input
+                          type="date"
+                          value={editDate}
+                          onChange={(e) => setEditDate(e.target.value)}
+                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-slate-800 font-light text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+                        />
+                        <select
+                          value={editAuthor}
+                          onChange={(e) => setEditAuthor(e.target.value)}
+                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-slate-800 font-light text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+                        >
+                          <option value="">No author</option>
+                          {TEAM_MEMBERS.map(member => (
+                            <option key={member} value={member}>{member}</option>
+                          ))}
+                        </select>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => saveEdit(task.id)}
+                            className="flex-1 px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors font-light"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={cancelEdit}
+                            className="flex-1 px-3 py-2 bg-slate-400 text-white text-sm rounded-md hover:bg-slate-500 transition-colors font-light"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="flex justify-between items-start gap-2 mb-2">
+                          <p className="text-slate-800 font-light flex-1 cursor-pointer hover:underline" onClick={() => startEdit(task)}>
+                            {task.title}
+                          </p>
+                          <button
+                            onClick={() => deleteTask(task.id)}
+                            className="text-slate-400 hover:text-slate-600 opacity-0 group-hover:opacity-100 transition-opacity text-sm"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                        {(task.date || task.author) && (
+                          <div className="space-y-1 text-xs">
+                            {task.date && (
+                              <p className="text-slate-600">📅 {new Date(task.date).toLocaleDateString()}</p>
+                            )}
+                            {task.author && (
+                              <p className="text-slate-600">👤 {task.author}</p>
+                            )}
+                          </div>
+                        )}
+                        <button
+                          onClick={() => startEdit(task)}
+                          className="mt-2 text-xs text-slate-500 hover:text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          edit
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
 
