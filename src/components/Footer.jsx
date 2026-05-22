@@ -18,6 +18,7 @@ export default function Footer() {
             <ul className="space-y-2 text-slate-400 font-light text-sm">
               <li><a href="/" className="hover:text-white transition-colors">Home</a></li>
               <li><a href="/tasks" className="hover:text-white transition-colors">My Tasks</a></li>
+              <li><a href="/tic-tac-toe" className="hover:text-white transition-colors">Tic-Tac-Toe</a></li>
             </ul>
           </div>
           <div>

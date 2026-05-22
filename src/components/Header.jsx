@@ -22,6 +22,12 @@ export default function Header() {
             >
               My Tasks
             </Link>
+            <Link
+              to="/tic-tac-toe"
+              className="text-slate-600 hover:text-slate-800 transition-colors font-light"
+            >
+              Tic-Tac-Toe
+            </Link>
           </div>
         </nav>
       </div>
