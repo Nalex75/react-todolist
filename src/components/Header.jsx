@@ -28,6 +28,12 @@ export default function Header() {
             >
               Tic-Tac-Toe
             </Link>
+            <Link
+              to="/minesweeper"
+              className="text-slate-600 hover:text-slate-800 transition-colors font-light"
+            >
+              Minesweeper
+            </Link>
           </div>
         </nav>
       </div>

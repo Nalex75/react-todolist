@@ -4,7 +4,9 @@
       "Bash(npm run *)",
       "mcp__Claude_in_Chrome__tabs_context_mcp",
       "Bash(grep -E \"\\\\.\\(jsx|js\\)$\")",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(mkdir -p /Users/alex/Pro/Projets/react-todolist/.claude)",
+      "mcp__Claude_Preview__preview_start"
     ]
   }
 }
