@@ -34,6 +34,12 @@ export default function Header() {
             >
               Minesweeper
             </Link>
+            <Link
+              to="/filterable-products-table"
+              className="text-slate-600 hover:text-slate-800 transition-colors font-light"
+            >
+              Filterable Products Table
+            </Link>
           </div>
         </nav>
       </div>

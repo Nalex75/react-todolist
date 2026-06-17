@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+// Origin: https://react.dev/learn/tutorial-tic-tac-toe
+
 function Square({ value, onSquareClick }) {
   return (
     <button className="square" onClick={onSquareClick}>

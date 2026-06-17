@@ -5,6 +5,7 @@ import Landing from './src/pages/Landing';
 import Tasks from './src/pages/Tasks';
 import TicTacToe from './src/pages/TicTacToe';
 import Minesweeper from './src/pages/Minesweeper';
+import FilterableProductsTable from './src/pages/FilterableProductsTable';
 import "./styles.css";
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/tic-tac-toe" element={<TicTacToe />} />
           <Route path="/minesweeper" element={<Minesweeper />} />
+          <Route path="/filterable-products-table" element={<FilterableProductsTable />} />
         </Routes>
       </Layout>
     </Router>
